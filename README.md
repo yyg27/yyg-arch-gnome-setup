@@ -3,7 +3,7 @@
 
 > Personal Arch Linux / GNOME workstation setup by **YYG**.
 
-A personal setup guide for quickly preparing a fresh EndeavourOS / Arch Linux installation with the development environment, shell, terminal, fonts, GNOME shortcuts, and Git/SSH configuration.
+A personal setup guide for quickly preparing a fresh Arch Linux / GNOME installation with the development environment, shell, terminal, fonts, GNOME shortcuts, and Git/SSH configuration.
 
 ---
 
