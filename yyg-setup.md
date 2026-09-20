@@ -128,7 +128,7 @@ Kurulum tamamlanmadan başarı mesajı verme.
 | Kısayol       | İşlev                          |
 | ------------- | ------------------------------ |
 | **Super + C** | VS Code (`code`)               |
-| **Super + T** | GNOME Console (`kgx`)          |
+| **Super + T** | GNOME Terminal (`gnome-terminal`) |
 | **Super + E** | Dosya Yöneticisi (`nautilus`)  |
 | **Super + W** | Firefox (`firefox`)            |
 | **Super + M** | YouTube Music (`youtubemusic`) |
@@ -202,7 +202,30 @@ sudo pacman -S --needed --noconfirm \
     zsh \
     fastfetch \
     python \
-    python-pip
+    python-pip \
+    gnome-terminal
+```
+
+---
+
+# 1.5. Yay ve Yayy (AUR Helper) Kurulumu
+
+Önce standart `yay` paket yöneticisini kur:
+
+```bash
+rm -rf /tmp/yay-bin
+git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+cd /tmp/yay-bin
+makepkg -si --noconfirm
+rm -rf /tmp/yay-bin
+```
+
+Ardından özel `yayy` CLI aracını kur:
+
+```bash
+curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
+bash /tmp/yayy-install.sh
+rm -f /tmp/yayy-install.sh
 ```
 
 ---
@@ -445,18 +468,18 @@ gsettings set \
     binding '<Super>c'
 ```
 
-## Super + T → GNOME Console
+## Super + T → GNOME Terminal
 
 ```bash
 P2="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
 
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
-    name 'GNOME Console'
+    name 'GNOME Terminal'
 
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
-    command 'kgx'
+    command 'gnome-terminal'
 
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
@@ -663,7 +686,8 @@ Key yoksa:
 ssh-keygen \
     -t ed25519 \
     -C "$GIT_EMAIL" \
-    -f "$HOME/.ssh/id_ed25519"
+    -f "$HOME/.ssh/id_ed25519" \
+    -N ""
 ```
 
 **Mevcut `id_ed25519` anahtarının üzerine yazma.**

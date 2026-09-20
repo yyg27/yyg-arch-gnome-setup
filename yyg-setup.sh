@@ -85,9 +85,31 @@ sudo pacman -S --needed --noconfirm \
     zsh \
     fastfetch \
     python \
-    python-pip
+    python-pip \
+    gnome-terminal
 
 success "Temel paketler hazır."
+
+# ============================================================
+# 2.5. Yay & Yayy
+# ============================================================
+
+log "Yay ve Yayy hazırlanıyor..."
+
+if ! command -v yay >/dev/null 2>&1; then
+    rm -rf /tmp/yay-bin
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    (cd /tmp/yay-bin && makepkg -si --noconfirm)
+    rm -rf /tmp/yay-bin
+    success "Yay kuruldu."
+else
+    success "Yay zaten kurulu."
+fi
+
+curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
+bash /tmp/yayy-install.sh
+rm -f /tmp/yayy-install.sh
+success "Yayy CLI kuruldu."
 
 # ============================================================
 # 3. NVM
@@ -466,16 +488,16 @@ gsettings set \
     binding '<Super>c'
 
 # ------------------------------------------------------------
-# Super + T → GNOME Console
+# Super + T → GNOME Terminal
 # ------------------------------------------------------------
 
 gsettings set \
     "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$P2" \
-    name 'GNOME Console'
+    name 'GNOME Terminal'
 
 gsettings set \
     "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$P2" \
-    command 'kgx'
+    command 'gnome-terminal'
 
 gsettings set \
     "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$P2" \
