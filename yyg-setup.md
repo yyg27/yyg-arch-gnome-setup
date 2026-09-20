@@ -1,46 +1,45 @@
+# Arch Linux / GNOME YYG System Setup & Configuration Guide (`yyg-setup.md`)
 
-# Arch Linux / GNOME YYG Sistem Kurulum & Yapılandırma Rehberi (`yyg-setup.md`)
+This document is designed to **install and configure** YYG's development environment, Zsh shell, terminal theme, fonts, GNOME shortcuts, and Git/SSH configuration in a fresh Arch Linux + GNOME system in **a single run**.
 
-Bu doküman, yeni bir Arch Linux + GNOME sisteminde YYG'nin geliştirme ortamını, Zsh kabuğunu, terminal temasını, fontlarını, GNOME kısayollarını ve Git/SSH yapılandırmasını **tek seferde kurmak ve yapılandırmak** için hazırlanmıştır.
+The document can be used in two different ways:
 
-Doküman iki farklı şekilde kullanılabilir:
+1. **With an AI coding agent / CLI:** You can give this `.md` file to any AI coding agent to execute the steps below.
+2. **Manually:** You can directly run the commands in the document in your terminal.
 
-1. **AI coding agent / CLI ile:** Bu `.md` dosyasını herhangi bir AI coding agent'a vererek aşağıdaki adımları uygulatabilirsin.
-2. **Manuel olarak:** Dokümandaki komutları doğrudan terminalde çalıştırabilirsin.
-
-Ayrıca aynı kurulumun otomatikleştirilmiş hali olan `yyg-setup.sh` dosyası da kullanılabilir. **`yyg-setup.md`, `yyg-setup.sh` dosyasına bağımlı değildir ve tek başına yeterlidir.**
+Additionally, the automated shell script version `yyg-setup.sh` can be used. **`yyg-setup.md` does not depend on the `yyg-setup.sh` file and is sufficient on its own.**
 
 > [!TIP]
-> Yeni bir bilgisayarda veya sıfır kurulumda bu dosyayı kullandığın AI coding CLI aracına verip **"yyg-setup.md rehberindeki kurulumları gerçekleştir"** demen yeterlidir.
+> On a new computer or a fresh installation, simply provide this file to the AI coding CLI tool you are using and tell it to **"execute the setup in the yyg-setup.md guide"**.
 
 ---
 
-# AI Agent Talimatları
+# AI Agent Instructions
 
-Bu dokümanı bir AI coding agent olarak uyguluyorsan aşağıdaki kurallara uy.
+If you are executing this document as an AI coding agent, follow the rules below.
 
-### 1. Bu doküman tek başına uygulanabilir
+### 1. This document can be executed standalone
 
-`yyg-setup.sh` mevcut değilse bile kurulumun tamamını bu dokümandaki komutları kullanarak gerçekleştir.
+Even if `yyg-setup.sh` is not available, perform the entire setup using the commands in this document.
 
-`yyg-setup.sh` mevcutsa, istersen onu çalıştırabilirsin; ancak `.md` dosyasının çalışması için script gerekli değildir.
+If `yyg-setup.sh` is available, you may run it; however, the script is not required for the `.md` file to work.
 
-### 2. Önce mevcut sistemi kontrol et
+### 2. Check the current system first
 
-Kuruluma başlamadan önce:
+Before starting the installation:
 
-* İşletim sisteminin Arch Linux tabanlı olduğunu kontrol et.
-* Gerekli programların kurulu olup olmadığını kontrol et.
-* Mevcut Zsh yapılandırmasını kontrol et.
-* Mevcut Git yapılandırmasını kontrol et.
-* Mevcut SSH anahtarlarını kontrol et.
-* GNOME oturumunun aktif olup olmadığını kontrol et.
+* Verify that the operating system is Arch Linux-based.
+* Check if the required programs are already installed.
+* Check the current Zsh configuration.
+* Check the current Git configuration.
+* Check the current SSH keys.
+* Check if the GNOME session is active.
 
-Zaten kurulu olan paketleri gereksiz yere yeniden kurma.
+Do not unnecessarily reinstall packages that are already installed.
 
-### 3. Mevcut yapılandırmaları koru
+### 3. Preserve existing configurations
 
-Aşağıdaki dosyaları doğrudan silme:
+Do not directly delete the following files:
 
 ```text
 ~/.zshrc
@@ -49,46 +48,44 @@ Aşağıdaki dosyaları doğrudan silme:
 ~/.ssh/
 ```
 
-Değişiklik yapmadan önce backup al.
+Take a backup before making changes.
 
-### 4. Kullanıcıdan gerekli bilgileri iste
+### 4. Request required information from the user
 
-Git yapılandırması için:
+For Git configuration, ask the user for:
 
-* Git kullanıcı adı
-* Git e-posta adresi
+* Git username
+* Git email address
 
-bilgilerini kullanıcıdan iste.
+### 5. Do not overwrite the SSH key
 
-### 5. SSH anahtarının üzerine yazma
+If `~/.ssh/id_ed25519` exists, definitely do not generate a new key.
 
-`~/.ssh/id_ed25519` mevcutsa kesinlikle yeni anahtar oluşturma.
+### 6. Apply GNOME shortcuts
 
-### 6. GNOME kısayollarını uygula
+The GNOME shortcuts in this document are part of YYG's personal system configuration and are **not optional.**
 
-Bu dokümandaki GNOME kısayolları YYG'nin kişisel sistem yapılandırmasının bir parçasıdır ve **opsiyonel değildir.**
+### 7. Do not hide errors
 
-### 7. Hataları gizleme
+If an installation step fails, report the error to the user and fix the problem if possible.
 
-Bir kurulum adımı başarısız olursa hatayı kullanıcıya bildir ve mümkünse problemi düzelt.
-
-Kurulum tamamlanmadan başarı mesajı verme.
+Do not send a success message until the installation is complete.
 
 ---
 
-#  Rehberde Yer Alan Tüm Kurulum ve Ayarlar
+# All Installations and Settings Included in the Guide
 
-## 1. Node.js & Backend Ortamı
+## 1. Node.js & Backend Environment
 
 * **NVM** (Node Version Manager)
 * **Node.js LTS**
 * **NPM**
 * Global **NestJS CLI** (`@nestjs/cli`)
-* NVM default Node sürümü → LTS
+* NVM default Node version → LTS
 
 ---
 
-## 2. Python & Geliştirme Paketleri
+## 2. Python & Development Packages
 
 * **Python 3**
 * **python-pip**
@@ -96,10 +93,11 @@ Kurulum tamamlanmadan başarı mesajı verme.
 * **Git**
 * **curl**
 * **unzip**
+* **gnome-terminal**
 
 ---
 
-## 3. Terminal & Kabuk Özelleştirmeleri
+## 3. Terminal & Shell Customizations
 
 * **Zsh**
 * **Fastfetch**
@@ -107,39 +105,39 @@ Kurulum tamamlanmadan başarı mesajı verme.
 * **zsh-autosuggestions**
 * **zsh-syntax-highlighting**
 * **Powerlevel10k**
-* Powerlevel10k instant prompt uyarıları kapalı
-* Interactive Bash açıldığında otomatik Zsh'e geçiş
-* Zsh varsayılan login shell
-* `neofetch` → `fastfetch` alias'ı
+* Powerlevel10k instant prompt warnings disabled
+* Automatic switch to Zsh when Interactive Bash is opened
+* Zsh as default login shell
+* `neofetch` → `fastfetch` alias
 
 ---
 
-## 4. Fontlar
+## 4. Fonts
 
 * **JetBrains Mono Nerd Font**
-* Font cache (`fc-cache`) güncellemesi
-* GNOME Terminal font ayarı
-* Font boyutu: `11`
+* Font cache (`fc-cache`) update
+* GNOME Terminal font setting
+* Font size: `11`
 
 ---
 
-## 5. GNOME Masaüstü Klavye Kısayolları
+## 5. GNOME Desktop Keyboard Shortcuts
 
-| Kısayol       | İşlev                          |
+| Shortcut      | Action                         |
 | ------------- | ------------------------------ |
 | **Super + C** | VS Code (`code`)               |
 | **Super + T** | GNOME Terminal (`gnome-terminal`) |
-| **Super + E** | Dosya Yöneticisi (`nautilus`)  |
+| **Super + E** | File Manager (`nautilus`)      |
 | **Super + W** | Firefox (`firefox`)            |
 | **Super + M** | YouTube Music (`youtubemusic`) |
-| **Super + V** | Bildirim tepsisi               |
-| **Super + Q** | Aktif pencereyi kapat          |
-| **Super + F** | Tam ekran                      |
-| **Super + G** | Pencereyi büyüt/küçült         |
+| **Super + V** | Notification tray              |
+| **Super + Q** | Close active window            |
+| **Super + F** | Fullscreen                     |
+| **Super + G** | Toggle maximize                |
 
-### Dock kısayolları
+### Dock shortcuts
 
-Dock üzerindeki:
+Application shortcuts on the dock:
 
 ```text
 Super + 1
@@ -149,20 +147,18 @@ Super + 3
 Super + 9
 ```
 
-uygulama kısayolları devre dışı bırakılır.
+are disabled.
 
 ---
 
-## 6. Git & GitHub Yapılandırması
+## 6. Git & GitHub Configuration
 
-Kurulum sırasında interaktif olarak:
+During installation, you will interactively be asked for:
 
-* Git kullanıcı adı
-* Git e-posta adresi
+* Git username
+* Git email address
 
-sorulur.
-
-Ayarlar:
+Settings:
 
 ```text
 user.name
@@ -175,15 +171,15 @@ init.defaultBranch = main
 ## 7. SSH
 
 * Ed25519 SSH key
-* Mevcut key korunur
-* Key yoksa yeni key oluşturulur
-* Public key kurulum sonunda gösterilir
+* Existing key is preserved
+* If no key exists, a new one is generated
+* Public key is displayed at the end of the installation
 
 ---
 
-#  Kurulum Adımları
+# Installation Steps
 
-## 0. Sistemi Güncelle
+## 0. Update System
 
 ```bash
 sudo pacman -Syu --noconfirm
@@ -191,7 +187,7 @@ sudo pacman -Syu --noconfirm
 
 ---
 
-# 1. Gerekli Sistem Paketlerini Kur
+# 1. Install Required System Packages
 
 ```bash
 sudo pacman -S --needed --noconfirm \
@@ -208,9 +204,9 @@ sudo pacman -S --needed --noconfirm \
 
 ---
 
-# 1.5. Yay ve Yayy (AUR Helper) Kurulumu
+# 1.5. Yay and Yayy (AUR Helper) Installation
 
-Önce standart `yay` paket yöneticisini kur:
+First, install the standard `yay` package manager:
 
 ```bash
 rm -rf /tmp/yay-bin
@@ -220,7 +216,7 @@ makepkg -si --noconfirm
 rm -rf /tmp/yay-bin
 ```
 
-Ardından özel `yayy` CLI aracını kur:
+Then install the custom `yayy` CLI tool:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
@@ -230,9 +226,9 @@ rm -f /tmp/yayy-install.sh
 
 ---
 
-# 2. NVM Kur
+# 2. Install NVM
 
-NVM mevcut değilse:
+If NVM is not available:
 
 ```bash
 curl -o- \
@@ -240,7 +236,7 @@ curl -o- \
     | bash
 ```
 
-Ardından:
+Then:
 
 ```bash
 export NVM_DIR="$HOME/.nvm"
@@ -251,7 +247,7 @@ export NVM_DIR="$HOME/.nvm"
 
 ---
 
-# 3. Node.js LTS Kur
+# 3. Install Node.js LTS
 
 ```bash
 nvm install --lts
@@ -259,7 +255,7 @@ nvm alias default 'lts/*'
 nvm use --lts
 ```
 
-Kontrol:
+Check:
 
 ```bash
 node --version
@@ -268,13 +264,13 @@ npm --version
 
 ---
 
-# 4. NestJS CLI Kur
+# 4. Install NestJS CLI
 
 ```bash
 npm install -g @nestjs/cli
 ```
 
-Kontrol:
+Check:
 
 ```bash
 nest --version
@@ -282,7 +278,7 @@ nest --version
 
 ---
 
-# 5. Oh My Zsh Kur
+# 5. Install Oh My Zsh
 
 ```bash
 git clone \
@@ -290,11 +286,11 @@ git clone \
     "$HOME/.oh-my-zsh"
 ```
 
-Zaten kuruluysa tekrar clone etme.
+Do not clone again if already installed.
 
 ---
 
-# 6. Zsh Eklentilerini Kur
+# 6. Install Zsh Plugins
 
 ### zsh-autosuggestions
 
@@ -314,7 +310,7 @@ git clone \
 
 ---
 
-# 7. Powerlevel10k Kur
+# 7. Install Powerlevel10k
 
 ```bash
 git clone --depth=1 \
@@ -324,15 +320,15 @@ git clone --depth=1 \
 
 ---
 
-# 8. JetBrains Mono Nerd Font Kur
+# 8. Install JetBrains Mono Nerd Font
 
-Font klasörünü oluştur:
+Create the font directory:
 
 ```bash
 mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
 ```
 
-Fontu indir:
+Download the font:
 
 ```bash
 curl -fL \
@@ -340,7 +336,7 @@ curl -fL \
     https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
 ```
 
-Çıkart:
+Extract:
 
 ```bash
 unzip -o \
@@ -348,13 +344,13 @@ unzip -o \
     -d "$HOME/.local/share/fonts/JetBrainsMono"
 ```
 
-Geçici dosyayı sil:
+Delete the temporary file:
 
 ```bash
 rm -f /tmp/JetBrainsMono.zip
 ```
 
-Font cache'i yenile:
+Refresh font cache:
 
 ```bash
 fc-cache -f
@@ -362,9 +358,9 @@ fc-cache -f
 
 ---
 
-# 9. `.zshrc` Yapılandır
+# 9. Configure `.zshrc`
 
-Mevcut dosyanın backup'ını aldıktan sonra `~/.zshrc` aşağıdaki yapılandırmayı kullanmalıdır:
+After backing up the existing file, `~/.zshrc` should use the following configuration:
 
 ```zsh
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
@@ -404,9 +400,9 @@ fi
 
 ---
 
-# 10. Bash → Zsh Geçişi
+# 10. Bash → Zsh Transition
 
-`~/.bashrc` içerisine aşağıdaki yapı eklenmelidir:
+The following block should be added into `~/.bashrc`:
 
 ```bash
 # YYG: Automatically switch interactive Bash sessions to Zsh
@@ -418,13 +414,13 @@ if [[ $- == *i* ]] &&
 fi
 ```
 
-Bu blok daha önce eklenmişse tekrar ekleme.
+Do not add this block again if it was added previously.
 
 ---
 
-# 11. GNOME Terminal Fontunu Ayarla
+# 11. Set GNOME Terminal Font
 
-Default GNOME Terminal profilini bul:
+Find the default GNOME Terminal profile:
 
 ```bash
 PROFILE=$(gsettings get \
@@ -432,7 +428,7 @@ PROFILE=$(gsettings get \
     2>/dev/null | tr -d "'")
 ```
 
-Profil mevcutsa:
+If profile exists:
 
 ```bash
 PROFILE_PATH="org.gnome.Terminal.Legacy.Profile:/org/gnome/terminal/legacy/profiles:/:${PROFILE}/"
@@ -448,7 +444,7 @@ gsettings set \
 
 ---
 
-# 12. GNOME Kısayollarını Ayarla
+# 12. Set GNOME Shortcuts
 
 ## Super + C → VS Code
 
@@ -486,14 +482,14 @@ gsettings set \
     binding '<Super>t'
 ```
 
-## Super + E → Dosya Yöneticisi
+## Super + E → File Manager
 
 ```bash
 P3="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
 
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P3" \
-    name 'Dosya Yöneticisi'
+    name 'File Manager'
 
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P3" \
@@ -540,7 +536,7 @@ gsettings set \
     binding '<Super>m'
 ```
 
-Custom keybinding listesini etkinleştir:
+Enable custom keybinding list:
 
 ```bash
 gsettings set \
@@ -551,9 +547,9 @@ gsettings set \
 
 ---
 
-# 13. Sistem Kısayollarını Ayarla
+# 13. Set System Shortcuts
 
-### Super + V → Bildirim Tepsisi
+### Super + V → Notification Tray
 
 ```bash
 gsettings set \
@@ -562,7 +558,7 @@ gsettings set \
     "['<Super>v']"
 ```
 
-### Super + Q → Aktif Pencereyi Kapat
+### Super + Q → Close Active Window
 
 ```bash
 gsettings set \
@@ -571,7 +567,7 @@ gsettings set \
     "['<Super>q', '<Alt>F4']"
 ```
 
-### Super + F → Tam Ekran
+### Super + F → Fullscreen
 
 ```bash
 gsettings set \
@@ -580,7 +576,7 @@ gsettings set \
     "['<Super>f', 'F11']"
 ```
 
-### Super + G → Pencereyi Büyüt/Küçült
+### Super + G → Toggle Maximize
 
 ```bash
 gsettings set \
@@ -591,7 +587,7 @@ gsettings set \
 
 ---
 
-# 14. Dock Uygulama Kısayollarını Kapat
+# 14. Disable Dock Application Shortcuts
 
 ```bash
 for i in {1..9}; do
@@ -631,25 +627,25 @@ gsettings set \
 
 ---
 
-# 15. Git Yapılandırması
+# 15. Git Configuration
 
-Git kullanıcı adı:
+Git username:
 
 ```bash
 read -r -p \
-    "Git Kullanıcı Adınızı girin (ör: yyg27): " \
+    "Enter your Git Username (e.g. yyg27): " \
     GIT_USERNAME < /dev/tty
 ```
 
-Git e-posta:
+Git email:
 
 ```bash
 read -r -p \
-    "Git E-posta Adresinizi girin: " \
+    "Enter your Git Email Address: " \
     GIT_EMAIL < /dev/tty
 ```
 
-Yapılandır:
+Configure:
 
 ```bash
 git config --global user.name "$GIT_USERNAME"
@@ -657,7 +653,7 @@ git config --global user.email "$GIT_EMAIL"
 git config --global init.defaultBranch "main"
 ```
 
-Kontrol:
+Check:
 
 ```bash
 git config --global --list
@@ -665,22 +661,22 @@ git config --global --list
 
 ---
 
-# 16. Ed25519 SSH Anahtarı
+# 16. Ed25519 SSH Key
 
-SSH klasörünü oluştur:
+Create SSH folder:
 
 ```bash
 mkdir -p "$HOME/.ssh"
 chmod 700 "$HOME/.ssh"
 ```
 
-Mevcut key'i kontrol et:
+Check existing key:
 
 ```bash
 ls -la "$HOME/.ssh/id_ed25519"*
 ```
 
-Key yoksa:
+If key doesn't exist:
 
 ```bash
 ssh-keygen \
@@ -690,7 +686,7 @@ ssh-keygen \
     -N ""
 ```
 
-**Mevcut `id_ed25519` anahtarının üzerine yazma.**
+**Do not overwrite existing `id_ed25519` key.**
 
 Public key:
 
@@ -700,13 +696,13 @@ cat "$HOME/.ssh/id_ed25519.pub"
 
 ---
 
-# 17. Zsh'i Varsayılan Shell Yap
+# 17. Set Zsh as Default Shell
 
 ```bash
 chsh -s "$(command -v zsh)"
 ```
 
-Mevcut shell:
+Current shell:
 
 ```bash
 echo "$SHELL"
@@ -714,9 +710,9 @@ echo "$SHELL"
 
 ---
 
-# 18. Kurulumu Doğrula
+# 18. Verify Installation
 
-Aşağıdaki komutlar başarıyla çalışmalıdır:
+The following commands should run successfully:
 
 ```bash
 node --version
@@ -735,21 +731,21 @@ Shell:
 echo "$SHELL"
 ```
 
-Beklenen:
+Expected:
 
 ```text
 /bin/zsh
 ```
 
-veya sistemdeki Zsh yolu.
+or the Zsh path in the system.
 
 ---
 
-#  Kurulum Tamamlandı
+# Installation Completed
 
-Kurulum tamamlandıktan sonra terminali kapatıp yeniden aç.
+After the installation is complete, close and reopen the terminal.
 
-Yeni sistemde aşağıdaki ortam hazır olmalıdır:
+The following environment should be ready on the new system:
 
 * Node.js LTS
 * NPM
@@ -765,8 +761,8 @@ Yeni sistemde aşağıdaki ortam hazır olmalıdır:
 * zsh-syntax-highlighting
 * Fastfetch
 * JetBrains Mono Nerd Font
-* GNOME Terminal font ayarı
-* YYG GNOME klavye kısayolları
+* GNOME Terminal font setting
+* YYG GNOME keyboard shortcuts
 * Git global configuration
 * Ed25519 SSH key
 * Zsh default shell
@@ -775,16 +771,15 @@ Yeni sistemde aşağıdaki ortam hazır olmalıdır:
 
 ## `yyg-setup.sh`
 
-Bu dokümanın otomatikleştirilmiş shell script versiyonudur.
+This is the automated shell script version of this document.
 
-Scripti ayrıca indirip kullanmak isteyenler:
+For those who want to download and use the script separately:
 
 ```bash
 chmod +x yyg-setup.sh
 ./yyg-setup.sh
 ```
 
-komutlarıyla kurulumu doğrudan gerçekleştirebilir.
+You can execute the installation directly with these commands.
 
-**`yyg-setup.sh` kullanmak zorunlu değildir. `yyg-setup.md` tek başına yeterlidir.**
-
+**Using `yyg-setup.sh` is not mandatory. `yyg-setup.md` is sufficient on its own.**

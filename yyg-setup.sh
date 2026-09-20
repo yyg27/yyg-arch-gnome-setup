@@ -32,7 +32,7 @@ fail() {
     exit 1
 }
 
-trap 'echo; echo "✗ Kurulum sırasında bir hata oluştu."; echo "  Satır: $LINENO"; echo "  Komut: $BASH_COMMAND"; exit 1' ERR
+trap 'echo; echo "✗ An error occurred during setup."; echo "  Line: $LINENO"; echo "  Command: $BASH_COMMAND"; exit 1' ERR
 
 # ============================================================
 # Header
@@ -47,35 +47,35 @@ echo "=========================================="
 # 0. System Check
 # ============================================================
 
-log "Sistem kontrol ediliyor..."
+log "Checking system..."
 
 if [[ ! -f /etc/os-release ]]; then
-    fail "/etc/os-release bulunamadı."
+    fail "/etc/os-release not found."
 fi
 
 source /etc/os-release
 
 if [[ "${ID:-}" != "arch" && "${ID_LIKE:-}" != *"arch"* ]]; then
-    fail "Bu script yalnızca Arch Linux / EndeavourOS sistemleri için hazırlanmıştır."
+    fail "This script is designed only for Arch Linux / EndeavourOS systems."
 fi
 
-success "Arch tabanlı sistem: ${PRETTY_NAME:-Unknown}"
+success "Arch-based system: ${PRETTY_NAME:-Unknown}"
 
 # ============================================================
 # 1. System Update
 # ============================================================
 
-log "Sistem güncelleniyor..."
+log "Updating system..."
 
 sudo pacman -Syu --noconfirm
 
-success "Sistem güncellendi."
+success "System updated."
 
 # ============================================================
 # 2. Required System Packages
 # ============================================================
 
-log "Gerekli sistem paketleri kuruluyor..."
+log "Installing required system packages..."
 
 sudo pacman -S --needed --noconfirm \
     base-devel \
@@ -88,40 +88,40 @@ sudo pacman -S --needed --noconfirm \
     python-pip \
     gnome-terminal
 
-success "Temel paketler hazır."
+success "Base packages ready."
 
 # ============================================================
 # 2.5. Yay & Yayy
 # ============================================================
 
-log "Yay ve Yayy hazırlanıyor..."
+log "Preparing Yay and Yayy..."
 
 if ! command -v yay >/dev/null 2>&1; then
     rm -rf /tmp/yay-bin
     git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
     (cd /tmp/yay-bin && makepkg -si --noconfirm)
     rm -rf /tmp/yay-bin
-    success "Yay kuruldu."
+    success "Yay installed."
 else
-    success "Yay zaten kurulu."
+    success "Yay is already installed."
 fi
 
 curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
 bash /tmp/yayy-install.sh
 rm -f /tmp/yayy-install.sh
-success "Yayy CLI kuruldu."
+success "Yayy CLI installed."
 
 # ============================================================
 # 3. NVM
 # ============================================================
 
-log "NVM kontrol ediliyor..."
+log "Checking NVM..."
 
 export NVM_DIR="$HOME/.nvm"
 
 if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
 
-    echo "    NVM bulunamadı, kuruluyor..."
+    echo "    NVM not found, installing..."
 
     curl -o- \
         "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" \
@@ -129,12 +129,12 @@ if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
 
 else
 
-    success "NVM zaten kurulu."
+    success "NVM is already installed."
 
 fi
 
 if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
-    fail "NVM kurulumu başarısız."
+    fail "NVM installation failed."
 fi
 
 source "$NVM_DIR/nvm.sh"
@@ -145,7 +145,7 @@ success "NVM: $(nvm --version)"
 # 4. Node.js LTS
 # ============================================================
 
-log "Node.js LTS hazırlanıyor..."
+log "Preparing Node.js LTS..."
 
 nvm install --lts
 nvm alias default 'lts/*'
@@ -158,17 +158,17 @@ success "NPM: $(npm --version)"
 # 5. NestJS CLI
 # ============================================================
 
-log "NestJS CLI kontrol ediliyor..."
+log "Checking NestJS CLI..."
 
 if command -v nest >/dev/null 2>&1; then
 
-    success "NestJS CLI zaten kurulu: $(nest --version)"
+    success "NestJS CLI is already installed: $(nest --version)"
 
 else
 
     npm install -g @nestjs/cli
 
-    success "NestJS CLI kuruldu: $(nest --version)"
+    success "NestJS CLI installed: $(nest --version)"
 
 fi
 
@@ -176,7 +176,7 @@ fi
 # 6. Shell Configuration Backup
 # ============================================================
 
-log "Mevcut shell yapılandırmaları backup'lanıyor..."
+log "Backing up current shell configurations..."
 
 BACKUP_DIR="$HOME/.yyg-setup-backups/$(date +%Y%m%d-%H%M%S)"
 
@@ -185,7 +185,7 @@ if [[ -f "$HOME/.zshrc" ]]; then
     mkdir -p "$BACKUP_DIR"
     cp "$HOME/.zshrc" "$BACKUP_DIR/.zshrc"
 
-    success "Mevcut .zshrc backup'landı."
+    success "Current .zshrc backed up."
 
 fi
 
@@ -194,7 +194,7 @@ if [[ -f "$HOME/.bashrc" ]]; then
     mkdir -p "$BACKUP_DIR"
     cp "$HOME/.bashrc" "$BACKUP_DIR/.bashrc"
 
-    success "Mevcut .bashrc backup'landı."
+    success "Current .bashrc backed up."
 
 fi
 
@@ -202,7 +202,7 @@ fi
 # 7. Oh My Zsh
 # ============================================================
 
-log "Oh My Zsh hazırlanıyor..."
+log "Preparing Oh My Zsh..."
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -212,11 +212,11 @@ if [[ ! -d "$ZSH" ]]; then
         https://github.com/ohmyzsh/ohmyzsh.git \
         "$ZSH"
 
-    success "Oh My Zsh kuruldu."
+    success "Oh My Zsh installed."
 
 else
 
-    success "Oh My Zsh zaten kurulu."
+    success "Oh My Zsh is already installed."
 
 fi
 
@@ -224,7 +224,7 @@ fi
 # 8. Zsh Plugins
 # ============================================================
 
-log "Zsh eklentileri hazırlanıyor..."
+log "Preparing Zsh plugins..."
 
 CUSTOM_PLUGIN_DIR="$ZSH/custom/plugins"
 CUSTOM_THEME_DIR="$ZSH/custom/themes"
@@ -243,11 +243,11 @@ if [[ ! -d "$CUSTOM_PLUGIN_DIR/zsh-autosuggestions" ]]; then
         https://github.com/zsh-users/zsh-autosuggestions \
         "$CUSTOM_PLUGIN_DIR/zsh-autosuggestions"
 
-    success "zsh-autosuggestions kuruldu."
+    success "zsh-autosuggestions installed."
 
 else
 
-    success "zsh-autosuggestions zaten kurulu."
+    success "zsh-autosuggestions is already installed."
 
 fi
 
@@ -261,11 +261,11 @@ if [[ ! -d "$CUSTOM_PLUGIN_DIR/zsh-syntax-highlighting" ]]; then
         https://github.com/zsh-users/zsh-syntax-highlighting.git \
         "$CUSTOM_PLUGIN_DIR/zsh-syntax-highlighting"
 
-    success "zsh-syntax-highlighting kuruldu."
+    success "zsh-syntax-highlighting installed."
 
 else
 
-    success "zsh-syntax-highlighting zaten kurulu."
+    success "zsh-syntax-highlighting is already installed."
 
 fi
 
@@ -273,7 +273,7 @@ fi
 # 9. Powerlevel10k
 # ============================================================
 
-log "Powerlevel10k hazırlanıyor..."
+log "Preparing Powerlevel10k..."
 
 if [[ ! -d "$CUSTOM_THEME_DIR/powerlevel10k" ]]; then
 
@@ -281,11 +281,11 @@ if [[ ! -d "$CUSTOM_THEME_DIR/powerlevel10k" ]]; then
         https://github.com/romkatv/powerlevel10k.git \
         "$CUSTOM_THEME_DIR/powerlevel10k"
 
-    success "Powerlevel10k kuruldu."
+    success "Powerlevel10k installed."
 
 else
 
-    success "Powerlevel10k zaten kurulu."
+    success "Powerlevel10k is already installed."
 
 fi
 
@@ -293,7 +293,7 @@ fi
 # 10. JetBrains Mono Nerd Font
 # ============================================================
 
-log "JetBrains Mono Nerd Font hazırlanıyor..."
+log "Preparing JetBrains Mono Nerd Font..."
 
 FONT_DIR="$HOME/.local/share/fonts/JetBrainsMono"
 FONT_FILE="$FONT_DIR/JetBrainsMonoNerdFont-Regular.ttf"
@@ -316,11 +316,11 @@ if [[ ! -f "$FONT_FILE" ]]; then
 
     fc-cache -f
 
-    success "JetBrains Mono Nerd Font kuruldu."
+    success "JetBrains Mono Nerd Font installed."
 
 else
 
-    success "JetBrains Mono Nerd Font zaten kurulu."
+    success "JetBrains Mono Nerd Font is already installed."
 
 fi
 
@@ -328,7 +328,7 @@ fi
 # 11. GNOME Terminal Font
 # ============================================================
 
-log "GNOME Terminal font ayarlanıyor..."
+log "Setting GNOME Terminal font..."
 
 if command -v gsettings >/dev/null 2>&1 &&
    gsettings list-schemas 2>/dev/null |
@@ -353,17 +353,17 @@ if command -v gsettings >/dev/null 2>&1 &&
             "$PROFILE_PATH" \
             font 'JetBrainsMono Nerd Font 11'
 
-        success "GNOME Terminal fontu ayarlandı."
+        success "GNOME Terminal font set."
 
     else
 
-        warning "GNOME Terminal profili bulunamadı."
+        warning "GNOME Terminal profile not found."
 
     fi
 
 else
 
-    warning "GNOME Terminal bulunamadı."
+    warning "GNOME Terminal not found."
 
 fi
 
@@ -371,7 +371,7 @@ fi
 # 12. .zshrc Configuration
 # ============================================================
 
-log "~/.zshrc yapılandırılıyor..."
+log "Configuring ~/.zshrc..."
 
 cat > "$HOME/.zshrc" <<'EOF'
 # ============================================================
@@ -420,13 +420,13 @@ if command -v fastfetch >/dev/null 2>&1; then
 fi
 EOF
 
-success ".zshrc oluşturuldu."
+success ".zshrc created."
 
 # ============================================================
 # 13. Bash → Zsh
 # ============================================================
 
-log "~/.bashrc kontrol ediliyor..."
+log "Checking ~/.bashrc..."
 
 BASH_MARKER="# YYG: Automatically switch interactive Bash sessions to Zsh"
 
@@ -443,11 +443,11 @@ if [[ $- == *i* ]] &&
 fi
 EOF
 
-    success ".bashrc fallback eklendi."
+    success ".bashrc fallback added."
 
 else
 
-    success ".bashrc fallback zaten mevcut."
+    success ".bashrc fallback already exists."
 
 fi
 
@@ -455,10 +455,10 @@ fi
 # 14. GNOME Keyboard Shortcuts
 # ============================================================
 
-log "GNOME klavye kısayolları ayarlanıyor..."
+log "Setting GNOME keyboard shortcuts..."
 
 if ! command -v gsettings >/dev/null 2>&1; then
-    fail "gsettings bulunamadı."
+    fail "gsettings not found."
 fi
 
 # ------------------------------------------------------------
@@ -509,7 +509,7 @@ gsettings set \
 
 gsettings set \
     "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$P3" \
-    name 'Dosya Yöneticisi'
+    name 'File Manager'
 
 gsettings set \
     "org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$P3" \
@@ -593,7 +593,7 @@ gsettings set \
 # 16. Disable Super + 1..9
 # ============================================================
 
-log "Dock uygulama kısayolları devre dışı bırakılıyor..."
+log "Disabling Dock application shortcuts..."
 
 for i in {1..9}; do
 
@@ -623,45 +623,45 @@ gsettings set \
     hot-keys false \
     2>/dev/null || true
 
-success "GNOME kısayolları ayarlandı."
+success "GNOME shortcuts set."
 
 # ============================================================
 # 17. Git Configuration
 # ============================================================
 
-log "Git yapılandırılıyor..."
+log "Configuring Git..."
 
 echo
 
 read -r -p \
-    "Git Kullanıcı Adınızı girin (ör: yyg27): " \
+    "Enter your Git Username (e.g. yyg27): " \
     GIT_USERNAME < /dev/tty
 
 read -r -p \
-    "Git E-posta Adresinizi girin: " \
+    "Enter your Git Email Address: " \
     GIT_EMAIL < /dev/tty
 
 if [[ -z "$GIT_USERNAME" ]]; then
-    fail "Git kullanıcı adı boş bırakılamaz."
+    fail "Git username cannot be empty."
 fi
 
 if [[ -z "$GIT_EMAIL" ]]; then
-    fail "Git e-posta adresi boş bırakılamaz."
+    fail "Git email address cannot be empty."
 fi
 
 git config --global user.name "$GIT_USERNAME"
 git config --global user.email "$GIT_EMAIL"
 git config --global init.defaultBranch "main"
 
-success "Git kullanıcı adı: $GIT_USERNAME"
-success "Git e-posta: $GIT_EMAIL"
+success "Git username: $GIT_USERNAME"
+success "Git email: $GIT_EMAIL"
 success "Default branch: main"
 
 # ============================================================
 # 18. SSH Ed25519 Key
 # ============================================================
 
-log "SSH anahtarı kontrol ediliyor..."
+log "Checking SSH key..."
 
 SSH_DIR="$HOME/.ssh"
 SSH_KEY="$SSH_DIR/id_ed25519"
@@ -672,13 +672,13 @@ chmod 700 "$SSH_DIR"
 
 if [[ -f "$SSH_KEY" ]]; then
 
-    success "Mevcut Ed25519 SSH anahtarı bulundu."
-    success "Mevcut anahtar korunuyor."
+    success "Existing Ed25519 SSH key found."
+    success "Existing key is preserved."
 
 else
 
-    echo "    Ed25519 SSH anahtarı bulunamadı."
-    echo "    Yeni anahtar oluşturuluyor..."
+    echo "    Ed25519 SSH key not found."
+    echo "    Generating new key..."
 
     # Empty passphrase by design.
     ssh-keygen \
@@ -690,7 +690,7 @@ else
     chmod 600 "$SSH_KEY"
     chmod 644 "$SSH_PUBLIC_KEY"
 
-    success "Yeni Ed25519 SSH anahtarı oluşturuldu."
+    success "New Ed25519 SSH key generated."
 
 fi
 
@@ -701,7 +701,7 @@ echo "--------------------------------------------------"
 if [[ -f "$SSH_PUBLIC_KEY" ]]; then
     cat "$SSH_PUBLIC_KEY"
 else
-    warning "SSH public key bulunamadı."
+    warning "SSH public key not found."
 fi
 
 echo "--------------------------------------------------"
@@ -710,7 +710,7 @@ echo "--------------------------------------------------"
 # 19. Default Shell
 # ============================================================
 
-log "Zsh varsayılan shell yapılıyor..."
+log "Setting Zsh as default shell..."
 
 ZSH_PATH="$(command -v zsh)"
 CURRENT_SHELL="$(getent passwd "$USER" | cut -d: -f7)"
@@ -719,11 +719,11 @@ if [[ "$CURRENT_SHELL" != "$ZSH_PATH" ]]; then
 
     chsh -s "$ZSH_PATH"
 
-    success "Varsayılan shell: $ZSH_PATH"
+    success "Default shell: $ZSH_PATH"
 
 else
 
-    success "Zsh zaten varsayılan shell."
+    success "Zsh is already the default shell."
 
 fi
 
@@ -731,7 +731,7 @@ fi
 # 20. Final Verification
 # ============================================================
 
-log "Kurulum doğrulanıyor..."
+log "Verifying installation..."
 
 echo
 echo "Node.js:"
@@ -775,12 +775,12 @@ getent passwd "$USER" | cut -d: -f7
 
 echo
 echo "=========================================="
-echo " YYG Sistem Kurulumu Tamamlandı!"
+echo " YYG System Setup Completed!"
 echo "=========================================="
 
 echo
-echo "Kurulan / yapılandırılanlar:"
-echo "  ✓ Arch sistem paketleri"
+echo "Installed / configured:"
+echo "  ✓ Arch system packages"
 echo "  ✓ Git"
 echo "  ✓ Python + pip"
 echo "  ✓ Zsh"
@@ -795,23 +795,23 @@ echo "  ✓ NPM"
 echo "  ✓ NestJS CLI"
 echo "  ✓ JetBrains Mono Nerd Font"
 echo "  ✓ GNOME Terminal font"
-echo "  ✓ GNOME klavye kısayolları"
+echo "  ✓ GNOME keyboard shortcuts"
 echo "  ✓ Git configuration"
 echo "  ✓ Ed25519 SSH key"
 echo "  ✓ Zsh default shell"
 
 if [[ -d "$BACKUP_DIR" ]]; then
     echo
-    echo "Eski shell yapılandırmaları:"
+    echo "Old shell configurations:"
     echo "  $BACKUP_DIR"
 fi
 
 echo
-echo "SSH public key yukarıda gösterildi."
+echo "SSH public key is displayed above."
 echo
-echo "Yeni shell ayarlarının aktif olması için"
-echo "terminali kapatıp yeniden aç."
+echo "To activate new shell settings,"
+echo "close and reopen the terminal."
 echo
-echo "YYG setup tamamlandı. 🚀"
+echo "YYG setup completed. 🚀"
 ```
 
