@@ -626,6 +626,27 @@ gsettings set \
 success "GNOME shortcuts set."
 
 # ============================================================
+# 16.5. Nautilus VS Code Script
+# ============================================================
+
+log "Adding Nautilus VS Code context menu script..."
+
+NAUTILUS_SCRIPTS_DIR="$HOME/.local/share/nautilus/scripts"
+mkdir -p "$NAUTILUS_SCRIPTS_DIR"
+
+cat << 'EOF' > "$NAUTILUS_SCRIPTS_DIR/Open in VS Code"
+#!/bin/sh
+if [ "$#" -eq 0 ]; then
+    code .
+else
+    code "$@"
+fi
+EOF
+
+chmod +x "$NAUTILUS_SCRIPTS_DIR/Open in VS Code"
+success "Nautilus script added."
+
+# ============================================================
 # 17. Git Configuration
 # ============================================================
 

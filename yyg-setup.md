@@ -149,6 +149,10 @@ Super + 9
 
 are disabled.
 
+## 5.5. Nautilus / File Manager Customizations
+
+A script named `Open in VS Code` is placed in `~/.local/share/nautilus/scripts/` so that folders can be opened via right-click in GNOME Files (Nautilus).
+
 ---
 
 ## 6. Git & GitHub Configuration
