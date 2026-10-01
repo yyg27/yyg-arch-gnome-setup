@@ -1,4 +1,3 @@
-```bash
 #!/usr/bin/env bash
 
 set -Eeuo pipefail
@@ -8,7 +7,7 @@ set -Eeuo pipefail
 # ============================================================
 
 readonly SCRIPT_NAME="YYG System Setup"
-readonly NVM_VERSION="v0.40.3"
+readonly NVM_INSTALLER_VERSION="v0.40.3"
 
 # ============================================================
 # Helpers
@@ -86,6 +85,7 @@ sudo pacman -S --needed --noconfirm \
     fastfetch \
     python \
     python-pip \
+    openssh \
     gnome-terminal
 
 success "Base packages ready."
@@ -106,7 +106,7 @@ else
     success "Yay is already installed."
 fi
 
-curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
+curl -fsSL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
 bash /tmp/yayy-install.sh
 rm -f /tmp/yayy-install.sh
 success "Yayy CLI installed."
@@ -123,8 +123,8 @@ if [[ ! -s "$NVM_DIR/nvm.sh" ]]; then
 
     echo "    NVM not found, installing..."
 
-    curl -o- \
-        "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh" \
+    curl -fsSL \
+        "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_INSTALLER_VERSION}/install.sh" \
         | bash
 
 else
@@ -303,7 +303,7 @@ mkdir -p "$FONT_DIR"
 
 if [[ ! -f "$FONT_FILE" ]]; then
 
-    curl -fL \
+    curl -fsSL \
         -o "$TEMP_ZIP" \
         "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
 
@@ -834,5 +834,4 @@ echo "To activate new shell settings,"
 echo "close and reopen the terminal."
 echo
 echo "YYG setup completed. 🚀"
-```
 

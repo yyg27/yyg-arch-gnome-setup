@@ -52,7 +52,6 @@ The script will:
 * Install Oh My Zsh
 * Install Powerlevel10k
 * Install Zsh plugins
-* Configure Fastfetch
 * Install JetBrains Mono Nerd Font
 * Configure the GNOME Terminal font
 * Configure GNOME keyboard shortcuts
@@ -177,7 +176,7 @@ The setup applies the following personal GNOME keyboard layout:
 | Shortcut    | Action              |
 | ----------- | ------------------- |
 | `Super + C` | VS Code             |
-| `Super + T` | GNOME Console       |
+| `Super + T` | GNOME Terminal      |
 | `Super + E` | Nautilus            |
 | `Super + W` | Firefox             |
 | `Super + M` | YouTube Music       |
@@ -333,7 +332,6 @@ The following software is **not** installed by the setup:
 * VS Code
 * Firefox
 * Nautilus
-* GNOME Console
 * YouTube Music
 * Docker
 * PostgreSQL
@@ -346,7 +344,7 @@ The following software is **not** installed by the setup:
 
 These can be installed separately when needed.
 
-> The presence of VS Code, Firefox, Nautilus, GNOME Console, and YouTube Music in the GNOME shortcuts does **not** mean they are installed by this setup.
+> The presence of VS Code, Firefox, Nautilus, and YouTube Music in the GNOME shortcuts does **not** mean they are installed by this setup.
 
 ---
 
@@ -374,8 +372,4 @@ A clean and reproducible Arch Linux + GNOME setup for development.
 
 ## License
 
-Personal configuration.
-
-Feel free to use, modify, and adapt it for your own system.
-
-
+[MIT](LICENSE)

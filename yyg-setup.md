@@ -93,6 +93,7 @@ Do not send a success message until the installation is complete.
 * **Git**
 * **curl**
 * **unzip**
+* **openssh**
 * **gnome-terminal**
 
 ---
@@ -203,6 +204,7 @@ sudo pacman -S --needed --noconfirm \
     fastfetch \
     python \
     python-pip \
+    openssh \
     gnome-terminal
 ```
 
@@ -223,7 +225,7 @@ rm -rf /tmp/yay-bin
 Then install the custom `yayy` CLI tool:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
+curl -fsSL https://raw.githubusercontent.com/yyg27/yayy/main/install.sh -o /tmp/yayy-install.sh
 bash /tmp/yayy-install.sh
 rm -f /tmp/yayy-install.sh
 ```
@@ -235,7 +237,7 @@ rm -f /tmp/yayy-install.sh
 If NVM is not available:
 
 ```bash
-curl -o- \
+curl -fsSL \
     https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh \
     | bash
 ```
@@ -335,7 +337,7 @@ mkdir -p "$HOME/.local/share/fonts/JetBrainsMono"
 Download the font:
 
 ```bash
-curl -fL \
+curl -fsSL \
     -o /tmp/JetBrainsMono.zip \
     https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
 ```
