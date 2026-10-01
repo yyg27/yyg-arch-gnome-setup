@@ -12,6 +12,7 @@ A personal setup guide for quickly preparing a fresh Arch Linux / GNOME installa
 ```text
 .
 ├── README.md
+├── gnome-extensions.dconf
 ├── yyg-setup.md
 └── yyg-setup.sh
 ```
@@ -21,6 +22,10 @@ A personal setup guide for quickly preparing a fresh Arch Linux / GNOME installa
 The **detailed installation documentation**.
 
 It explains every setup step individually and can be given to any AI coding CLI or coding agent.
+
+### `gnome-extensions.dconf`
+
+Settings of the GNOME Shell extensions, loaded by the setup with `dconf load`.
 
 ### `yyg-setup.sh`
 
@@ -53,7 +58,7 @@ chmod +x yyg-setup.sh
 Available steps:
 
 ```text
-system packages aur node shell font terminal gnome nautilus git ssh
+system packages aur node shell font terminal gnome extensions nautilus git ssh
 ```
 
 Git information is asked at the very beginning (only if no global Git identity exists), so the rest of the setup runs unattended. sudo access is requested once and kept alive during the setup.
@@ -72,6 +77,7 @@ The script will:
 * Install JetBrains Mono Nerd Font
 * Configure the GNOME Terminal font
 * Configure GNOME keyboard shortcuts
+* Install and configure GNOME Shell extensions
 * Configure Git
 * Generate an Ed25519 SSH key
 * Set Zsh as the default shell
@@ -218,6 +224,38 @@ are also disabled.
 Existing custom shortcuts are **preserved**. The YYG shortcuts are stored under their own `yyg-*` keybinding paths, and shortcuts created by older versions of this setup (same command and key) are replaced instead of duplicated.
 
 > These shortcuts are part of the personal YYG workstation configuration and are applied automatically by the setup script.
+
+---
+
+# GNOME Shell Extensions
+
+The following extensions are installed from [extensions.gnome.org](https://extensions.gnome.org) for the running GNOME Shell version and enabled:
+
+| Extension | UUID |
+| --- | --- |
+| Dash to Dock | `dash-to-dock@micxgx.gmail.com` |
+| User Themes | `user-theme@gnome-shell-extensions.gcampax.github.com` |
+| AppIndicator and KStatusNotifierItem Support | `appindicatorsupport@rgcjonas.gmail.com` |
+| Blur my Shell | `blur-my-shell@aunetx` |
+| Caffeine | `caffeine@patapon.info` |
+| Just Perfection | `just-perfection-desktop@just-perfection` |
+| GSConnect | `gsconnect@andyholmes.github.io` |
+| Desktop Icons NG (DING) | `ding@rastersoft.com` |
+| Lock Keys | `lockkeys@vaina.lt` |
+| Vitals | `Vitals@CoreCoding.com` |
+
+Already installed extensions are not reinstalled, and extensions that are already enabled stay enabled.
+
+Their settings are loaded from `gnome-extensions.dconf`. The previous extension settings are backed up to `~/.yyg-setup-backups/<date>/gnome-extensions.dconf` first. GSConnect settings are intentionally not included, because they contain paired device IDs.
+
+To update the saved settings from the current system:
+
+```bash
+dconf dump /org/gnome/shell/extensions/ \
+    | awk '/^\[/{skip=($0 ~ /^\[gsconnect/)} !skip'
+```
+
+Log out and back in after the setup to activate newly installed extensions.
 
 ---
 

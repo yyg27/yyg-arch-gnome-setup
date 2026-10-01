@@ -18,6 +18,7 @@ readonly STEPS=(
     font
     terminal
     gnome
+    extensions
     nautilus
     git
     ssh
@@ -56,6 +57,24 @@ readonly SYSTEM_SHORTCUTS=(
     "org.gnome.desktop.wm.keybindings|toggle-fullscreen|['<Super>f', 'F11']"
     "org.gnome.desktop.wm.keybindings|toggle-maximized|['<Super>g', '<Super>Up', '<Alt>F10']"
 )
+
+# extensions.gnome.org UUIDs
+readonly GNOME_EXTENSIONS=(
+    dash-to-dock@micxgx.gmail.com
+    user-theme@gnome-shell-extensions.gcampax.github.com
+    appindicatorsupport@rgcjonas.gmail.com
+    blur-my-shell@aunetx
+    caffeine@patapon.info
+    just-perfection-desktop@just-perfection
+    gsconnect@andyholmes.github.io
+    ding@rastersoft.com
+    lockkeys@vaina.lt
+    Vitals@CoreCoding.com
+)
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR
+readonly EXTENSIONS_DCONF="$SCRIPT_DIR/gnome-extensions.dconf"
 
 readonly ZSHRC_MARKER="# YYG ZSH CONFIGURATION"
 readonly BASH_MARKER="# YYG: Automatically switch interactive Bash sessions to Zsh"
@@ -758,6 +777,96 @@ if should_run gnome; then
     else
 
         warning "gsettings not found, skipping."
+
+    fi
+
+fi
+
+# ============================================================
+# 8.5. GNOME Shell Extensions
+# ============================================================
+
+if should_run extensions; then
+
+    log "Installing GNOME Shell extensions..."
+
+    if $HAS_GSETTINGS && command -v gnome-extensions >/dev/null 2>&1; then
+
+        SHELL_VERSION="$(gnome-shell --version | grep -oE '[0-9]+' | head -n 1)"
+        mapfile -t INSTALLED_EXTENSIONS < <(gnome-extensions list)
+
+        TMP_DIR="$(mktemp -d)"
+
+        for uuid in "${GNOME_EXTENSIONS[@]}"; do
+
+            if contains "$(IFS=,; echo "${INSTALLED_EXTENSIONS[*]}")" "$uuid"; then
+                success "$uuid is already installed."
+                continue
+            fi
+
+            INFO="$(curl -fsS "https://extensions.gnome.org/extension-info/?uuid=$uuid&shell_version=$SHELL_VERSION" || true)"
+            DOWNLOAD_PATH="$(grep -oE '"download_url": *"[^"]+"' <<<"$INFO" | cut -d'"' -f4 || true)"
+
+            if [[ -z "$DOWNLOAD_PATH" ]]; then
+                warning "$uuid is not available for GNOME Shell $SHELL_VERSION, skipping."
+                continue
+            fi
+
+            download "https://extensions.gnome.org$DOWNLOAD_PATH" "$TMP_DIR/$uuid.zip"
+            run gnome-extensions install --force "$TMP_DIR/$uuid.zip"
+
+            success "$uuid installed."
+
+        done
+
+        rm -rf "$TMP_DIR"
+
+        # ----------------------------------------------------
+        # Enable
+        # ----------------------------------------------------
+
+        # Newly installed extensions are only picked up by GNOME
+        # Shell after logging out, so they are enabled through
+        # gsettings instead of `gnome-extensions enable`.
+        mapfile -t ENABLED < <(gsettings_list org.gnome.shell enabled-extensions)
+
+        for uuid in "${GNOME_EXTENSIONS[@]}"; do
+            if ! contains "$(IFS=,; echo "${ENABLED[*]}")" "$uuid"; then
+                ENABLED+=("$uuid")
+            fi
+        done
+
+        run gsettings set org.gnome.shell disable-user-extensions false
+        run gsettings set org.gnome.shell enabled-extensions "$(to_gvariant_list "${ENABLED[@]}")"
+
+        success "Extensions enabled."
+
+        # ----------------------------------------------------
+        # Settings
+        # ----------------------------------------------------
+
+        if [[ -f "$EXTENSIONS_DCONF" ]]; then
+
+            if $DRY_RUN; then
+                echo "    [dry-run] dconf load /org/gnome/shell/extensions/ < $EXTENSIONS_DCONF"
+            else
+                dconf dump /org/gnome/shell/extensions/ >"$BACKUP_DIR/gnome-extensions.dconf"
+                dconf load /org/gnome/shell/extensions/ <"$EXTENSIONS_DCONF"
+            fi
+
+            success "Extension settings applied (previous settings backed up)."
+
+        else
+
+            warning "gnome-extensions.dconf not found next to the script, skipping settings."
+
+        fi
+
+        warning "Log out and back in to activate new extensions."
+
+    else
+
+        warning "GNOME Shell not found, skipping."
 
     fi
 

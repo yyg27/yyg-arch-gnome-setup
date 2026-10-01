@@ -22,6 +22,13 @@ If you are executing this document as an AI coding agent, follow the rules below
 
 Even if `yyg-setup.sh` is not available, perform the entire setup using the commands in this document.
 
+The only extra file needed is `gnome-extensions.dconf` (GNOME extension settings). If it is not next to this document, download it from the repository:
+
+```bash
+curl -fsSL -o gnome-extensions.dconf \
+    https://raw.githubusercontent.com/yyg27/yyg-arch-gnome-setup/main/gnome-extensions.dconf
+```
+
 If `yyg-setup.sh` is available, you may run it; however, the script is not required for the `.md` file to work.
 
 ### 2. Check the current system first
@@ -34,6 +41,7 @@ Before starting the installation:
 * Check the current Git configuration.
 * Check the current SSH keys.
 * Check if the GNOME session is active.
+* Check the GNOME Shell version and the installed / enabled GNOME extensions.
 
 Do not unnecessarily reinstall packages that are already installed.
 
@@ -57,7 +65,7 @@ Take a backup before making changes. Store backups in a timestamped directory:
 
 Never modify `~/.zshrc.local`; it holds the user's personal Zsh settings.
 
-Do not remove custom shortcuts the user already has; only add the YYG ones.
+Do not disable or remove GNOME extensions or custom shortcuts the user already has; only add the YYG ones.
 
 ### 4. Request required information from the user
 
@@ -162,6 +170,23 @@ Super + 9
 ```
 
 are disabled.
+
+## 5.2. GNOME Shell Extensions
+
+| Extension | UUID |
+| --- | --- |
+| Dash to Dock | `dash-to-dock@micxgx.gmail.com` |
+| User Themes | `user-theme@gnome-shell-extensions.gcampax.github.com` |
+| AppIndicator and KStatusNotifierItem Support | `appindicatorsupport@rgcjonas.gmail.com` |
+| Blur my Shell | `blur-my-shell@aunetx` |
+| Caffeine | `caffeine@patapon.info` |
+| Just Perfection | `just-perfection-desktop@just-perfection` |
+| GSConnect | `gsconnect@andyholmes.github.io` |
+| Desktop Icons NG (DING) | `ding@rastersoft.com` |
+| Lock Keys | `lockkeys@vaina.lt` |
+| Vitals | `Vitals@CoreCoding.com` |
+
+Extension settings come from `gnome-extensions.dconf` in this repository.
 
 ## 5.5. Nautilus / File Manager Customizations
 
@@ -591,6 +616,49 @@ gsettings set \
 
 ---
 
+# 14.5. Install GNOME Shell Extensions
+
+Detect the GNOME Shell major version:
+
+```bash
+gnome-shell --version
+```
+
+For every extension UUID in section 5.2 that is not listed by `gnome-extensions list`, query extensions.gnome.org for a compatible version:
+
+```bash
+curl -fsS "https://extensions.gnome.org/extension-info/?uuid=<UUID>&shell_version=<MAJOR>"
+```
+
+Download the `download_url` from the response (relative to `https://extensions.gnome.org`) and install it:
+
+```bash
+curl -fsSL -o /tmp/<UUID>.zip "https://extensions.gnome.org<download_url>"
+gnome-extensions install --force /tmp/<UUID>.zip
+```
+
+If an extension is not available for the current GNOME version, warn the user and continue.
+
+Enable the extensions by **adding** their UUIDs to the existing list (do not remove already enabled extensions):
+
+```bash
+gsettings get org.gnome.shell enabled-extensions
+gsettings set org.gnome.shell disable-user-extensions false
+gsettings set org.gnome.shell enabled-extensions "[<existing UUIDs>, <YYG UUIDs>]"
+```
+
+Back up the current extension settings, then load the YYG settings:
+
+```bash
+dconf dump /org/gnome/shell/extensions/ \
+    > ~/.yyg-setup-backups/<YYYYMMDD-HHMMSS>/gnome-extensions.dconf
+dconf load /org/gnome/shell/extensions/ < gnome-extensions.dconf
+```
+
+Tell the user to log out and back in to activate newly installed extensions.
+
+---
+
 # 15. Git Configuration
 
 Git username:
@@ -727,6 +795,7 @@ The following environment should be ready on the new system:
 * JetBrains Mono Nerd Font
 * GNOME Terminal font setting
 * YYG GNOME keyboard shortcuts
+* GNOME Shell extensions and their settings
 * Git global configuration
 * Ed25519 SSH key
 * Zsh default shell
