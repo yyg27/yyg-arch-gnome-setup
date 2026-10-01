@@ -41,6 +41,23 @@ chmod +x yyg-setup.sh
 ./yyg-setup.sh
 ```
 
+### Options
+
+```bash
+./yyg-setup.sh --dry-run            # Show what would be done, change nothing
+./yyg-setup.sh --only shell,font    # Run only the given steps
+./yyg-setup.sh --skip node,aur      # Run everything except the given steps
+./yyg-setup.sh --help
+```
+
+Available steps:
+
+```text
+system packages aur node shell font terminal gnome nautilus git ssh
+```
+
+Git information is asked at the very beginning (only if no global Git identity exists), so the rest of the setup runs unattended. sudo access is requested once and kept alive during the setup.
+
 The script will:
 
 * Update the system
@@ -133,6 +150,8 @@ pip --version
 
 Zsh is configured as the default shell.
 
+`~/.zshrc` is managed by the setup and rewritten on every run. Put your personal aliases and settings in `~/.zshrc.local`, which is sourced automatically and never modified.
+
 Check it with:
 
 ```bash
@@ -196,6 +215,8 @@ Super + 9
 
 are also disabled.
 
+Existing custom shortcuts are **preserved**. The YYG shortcuts are stored under their own `yyg-*` keybinding paths, and shortcuts created by older versions of this setup (same command and key) are replaced instead of duplicated.
+
 > These shortcuts are part of the personal YYG workstation configuration and are applied automatically by the setup script.
 
 ---
@@ -258,8 +279,11 @@ For example:
 ```text
 ~/.yyg-setup-backups/20260901-013000/
 ├── .bashrc
-└── .zshrc
+├── .zshrc
+└── setup.log
 ```
+
+The full output of every run is also written to `setup.log` in the same directory.
 
 This makes it possible to restore the previous configuration if necessary.
 
@@ -269,7 +293,8 @@ This makes it possible to restore the previous configuration if necessary.
 
 | File / Directory        | Description                 |
 | ----------------------- | --------------------------- |
-| `~/.zshrc`              | Zsh configuration           |
+| `~/.zshrc`              | Zsh configuration (managed, overwritten on every run) |
+| `~/.zshrc.local`        | Personal Zsh configuration (never touched) |
 | `~/.bashrc`             | Bash → Zsh fallback         |
 | `~/.p10k.zsh`           | Powerlevel10k configuration |
 | `~/.gitconfig`          | Global Git configuration    |

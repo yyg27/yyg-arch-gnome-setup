@@ -43,16 +43,25 @@ Do not directly delete the following files:
 
 ```text
 ~/.zshrc
+~/.zshrc.local
 ~/.bashrc
 ~/.gitconfig
 ~/.ssh/
 ```
 
-Take a backup before making changes.
+Take a backup before making changes. Store backups in a timestamped directory:
+
+```text
+~/.yyg-setup-backups/<YYYYMMDD-HHMMSS>/
+```
+
+Never modify `~/.zshrc.local`; it holds the user's personal Zsh settings.
+
+Do not remove custom shortcuts the user already has; only add the YYG ones.
 
 ### 4. Request required information from the user
 
-For Git configuration, ask the user for:
+For Git configuration, ask the user for the following **at the very beginning**, before any installation step, so that the rest of the setup can run unattended. Skip the question if a global Git identity already exists.
 
 * Git username
 * Git email address
@@ -64,6 +73,10 @@ If `~/.ssh/id_ed25519` exists, definitely do not generate a new key.
 ### 6. Apply GNOME shortcuts
 
 The GNOME shortcuts in this document are part of YYG's personal system configuration and are **not optional.**
+
+Do not overwrite the user's existing custom shortcuts. Add the YYG shortcuts to the existing `custom-keybindings` list instead of replacing the list.
+
+If GNOME / `gsettings` is not available, skip the GNOME steps with a warning instead of aborting the setup.
 
 ### 7. Do not hide errors
 
@@ -366,7 +379,9 @@ fc-cache -f
 
 # 9. Configure `.zshrc`
 
-After backing up the existing file, `~/.zshrc` should use the following configuration:
+After backing up the existing file, `~/.zshrc` should use the following configuration.
+
+`~/.zshrc` is managed by the setup. Personal settings go into `~/.zshrc.local`, which is sourced from `~/.zshrc`. Create `~/.zshrc.local` if it does not exist, but never overwrite it.
 
 ```zsh
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
@@ -398,6 +413,8 @@ fi
 alias neofetch='fastfetch'
 
 [[ -f "$HOME/.p10k.zsh" ]] && source "$HOME/.p10k.zsh"
+
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
 if command -v fastfetch >/dev/null 2>&1; then
     fastfetch
@@ -452,103 +469,44 @@ gsettings set \
 
 # 12. Set GNOME Shortcuts
 
-## Super + C → VS Code
+Each YYG shortcut is stored under its own `yyg-*` path so it never collides with the user's existing `custom0`, `custom1`, … shortcuts.
+
+| Path ID        | Name           | Command          | Binding     |
+| -------------- | -------------- | ---------------- | ----------- |
+| `yyg-vscode`   | VS Code        | `code`           | `<Super>c`  |
+| `yyg-terminal` | GNOME Terminal | `gnome-terminal` | `<Super>t`  |
+| `yyg-files`    | File Manager   | `nautilus`       | `<Super>e`  |
+| `yyg-firefox`  | Firefox        | `firefox`        | `<Super>w`  |
+| `yyg-music`    | Youtube Music  | `youtubemusic`   | `<Super>m`  |
+
+Set each shortcut (example for VS Code):
 
 ```bash
-P1="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+BASE="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+SCHEMA="org.gnome.settings-daemon.plugins.media-keys.custom-keybinding"
 
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P1" \
-    name 'VS Code'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P1" \
-    command 'code'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P1" \
-    binding '<Super>c'
+gsettings set "$SCHEMA:$BASE/yyg-vscode/" name 'VS Code'
+gsettings set "$SCHEMA:$BASE/yyg-vscode/" command 'code'
+gsettings set "$SCHEMA:$BASE/yyg-vscode/" binding '<Super>c'
 ```
 
-## Super + T → GNOME Terminal
+Then **add** the `yyg-*` paths to the existing list instead of replacing it:
 
 ```bash
-P2="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
-    name 'GNOME Terminal'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
-    command 'gnome-terminal'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P2" \
-    binding '<Super>t'
+gsettings get \
+    org.gnome.settings-daemon.plugins.media-keys \
+    custom-keybindings
 ```
 
-## Super + E → File Manager
-
-```bash
-P3="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P3" \
-    name 'File Manager'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P3" \
-    command 'nautilus'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P3" \
-    binding '<Super>e'
-```
-
-## Super + W → Firefox
-
-```bash
-P4="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom3/"
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P4" \
-    name 'Firefox'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P4" \
-    command 'firefox'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P4" \
-    binding '<Super>w'
-```
-
-## Super + M → YouTube Music
-
-```bash
-P5="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom4/"
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P5" \
-    name 'Youtube Music'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P5" \
-    command 'youtubemusic'
-
-gsettings set \
-    org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$P5" \
-    binding '<Super>m'
-```
-
-Enable custom keybinding list:
+* Keep every existing path.
+* Remove an existing path only if it has the **same command and binding** as a YYG shortcut (left over from an older version of this setup), to avoid duplicates.
+* Append the five `yyg-*` paths and write the list back:
 
 ```bash
 gsettings set \
     org.gnome.settings-daemon.plugins.media-keys \
     custom-keybindings \
-    "['$P1', '$P2', '$P3', '$P4', '$P5']"
+    "[<existing paths>, '$BASE/yyg-vscode/', '$BASE/yyg-terminal/', '$BASE/yyg-files/', '$BASE/yyg-firefox/', '$BASE/yyg-music/']"
 ```
 
 ---
@@ -787,5 +745,13 @@ chmod +x yyg-setup.sh
 ```
 
 You can execute the installation directly with these commands.
+
+Useful options:
+
+```bash
+./yyg-setup.sh --dry-run            # Show what would be done, change nothing
+./yyg-setup.sh --only shell,font    # Run only the given steps
+./yyg-setup.sh --skip node,aur      # Run everything except the given steps
+```
 
 **Using `yyg-setup.sh` is not mandatory. `yyg-setup.md` is sufficient on its own.**
