@@ -58,7 +58,7 @@ chmod +x yyg-setup.sh
 Available steps:
 
 ```text
-system packages aur node shell font terminal gnome extensions nautilus git ssh
+system packages aur node shell font terminal gnome extensions paletti nautilus git ssh
 ```
 
 Git information is asked at the very beginning (only if no global Git identity exists), so the rest of the setup runs unattended. sudo access is requested once and kept alive during the setup.
@@ -78,6 +78,7 @@ The script will:
 * Configure the GNOME Terminal font
 * Configure GNOME keyboard shortcuts
 * Install and configure GNOME Shell extensions
+* Install [Paletti](https://github.com/yyg27/paletti) (one-key GNOME color themes)
 * Configure Git
 * Generate an Ed25519 SSH key
 * Set Zsh as the default shell
@@ -256,6 +257,19 @@ dconf dump /org/gnome/shell/extensions/ \
 ```
 
 Log out and back in after the setup to activate newly installed extensions.
+
+---
+
+# Paletti
+
+[Paletti](https://github.com/yyg27/paletti) is cloned to `~/Projects/paletti` and installed with `paletti.py --install`, which links `~/.local/bin/paletti` and adds two shortcuts:
+
+| Shortcut | Action |
+| --- | --- |
+| `Super + Y` | Next palette |
+| `Super + Shift + Y` | Next wallpaper |
+
+An existing `~/Projects/paletti` is kept as is. It needs the User Themes extension from the previous step.
 
 ---
 

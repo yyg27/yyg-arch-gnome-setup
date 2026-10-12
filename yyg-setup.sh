@@ -19,6 +19,7 @@ readonly STEPS=(
     terminal
     gnome
     extensions
+    paletti
     nautilus
     git
     ssh
@@ -75,6 +76,7 @@ readonly GNOME_EXTENSIONS=(
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
 readonly EXTENSIONS_DCONF="$SCRIPT_DIR/gnome-extensions.dconf"
+readonly PALETTI_DIR="$HOME/Projects/paletti"
 
 readonly ZSHRC_MARKER="# YYG ZSH CONFIGURATION"
 readonly BASH_MARKER="# YYG: Automatically switch interactive Bash sessions to Zsh"
@@ -867,6 +869,32 @@ if should_run extensions; then
     else
 
         warning "GNOME Shell not found, skipping."
+
+    fi
+
+fi
+
+# ============================================================
+# 8.5. Paletti
+# ============================================================
+
+if should_run paletti; then
+
+    log "Installing Paletti..."
+
+    if $HAS_GSETTINGS; then
+
+        clone_repo https://github.com/yyg27/paletti.git "$PALETTI_DIR" "Paletti"
+
+        # Links ~/.local/bin/paletti, enables the transition extension
+        # and adds the Super+Y / Super+Shift+Y shortcuts. Idempotent.
+        run python "$PALETTI_DIR/paletti.py" --install
+
+        success "Paletti installed. Press Super+Y to switch palettes."
+
+    else
+
+        warning "gsettings not found, skipping."
 
     fi
 
