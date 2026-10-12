@@ -659,6 +659,25 @@ Tell the user to log out and back in to activate newly installed extensions.
 
 ---
 
+# 14.6. Install Paletti
+
+[Paletti](https://github.com/yyg27/paletti) switches the GNOME desktop between color themes. It needs the User Themes extension from the previous step.
+
+Clone it only if it is not there yet (do not touch an existing clone):
+
+```bash
+[ -d ~/Projects/paletti ] ||
+    git clone --depth=1 https://github.com/yyg27/paletti.git ~/Projects/paletti
+```
+
+Install it. This links `~/.local/bin/paletti`, enables its transition extension and adds the `Super + Y` (next palette) and `Super + Shift + Y` (next wallpaper) shortcuts, keeping existing ones:
+
+```bash
+python ~/Projects/paletti/paletti.py --install
+```
+
+---
+
 # 15. Git Configuration
 
 Git username:
