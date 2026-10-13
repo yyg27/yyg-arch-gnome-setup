@@ -222,6 +222,8 @@ Super + 9
 
 are also disabled.
 
+Window title bars also get **minimize, maximize and close** buttons on the right.
+
 Existing custom shortcuts are **preserved**. The YYG shortcuts are stored under their own `yyg-*` keybinding paths, and shortcuts created by older versions of this setup (same command and key) are replaced instead of duplicated.
 
 > These shortcuts are part of the personal YYG workstation configuration and are applied automatically by the setup script.

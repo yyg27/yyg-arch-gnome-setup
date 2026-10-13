@@ -574,6 +574,15 @@ gsettings set \
     "['<Super>g', '<Super>Up', '<Alt>F10']"
 ```
 
+### Window Buttons → Minimize, Maximize, Close
+
+```bash
+gsettings set \
+    org.gnome.desktop.wm.preferences \
+    button-layout \
+    "'appmenu:minimize,maximize,close'"
+```
+
 ---
 
 # 14. Disable Dock Application Shortcuts
