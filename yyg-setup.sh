@@ -57,6 +57,8 @@ readonly SYSTEM_SHORTCUTS=(
     "org.gnome.desktop.wm.keybindings|close|['<Super>q', '<Alt>F4']"
     "org.gnome.desktop.wm.keybindings|toggle-fullscreen|['<Super>f', 'F11']"
     "org.gnome.desktop.wm.keybindings|toggle-maximized|['<Super>g', '<Super>Up', '<Alt>F10']"
+    # Not a shortcut, applied the same way: minimize, maximize and close on the right.
+    "org.gnome.desktop.wm.preferences|button-layout|'appmenu:minimize,maximize,close'"
 )
 
 # extensions.gnome.org UUIDs
