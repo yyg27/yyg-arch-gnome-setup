@@ -36,6 +36,7 @@ readonly PACKAGES=(
     python-pip
     openssh
     gnome-terminal
+    tela-circle-icon-theme-standard # Paletti recolors it to each palette
 )
 
 readonly KEYBINDINGS_SCHEMA="org.gnome.settings-daemon.plugins.media-keys"
@@ -887,6 +888,9 @@ if should_run paletti; then
     if $HAS_GSETTINGS; then
 
         clone_repo https://github.com/yyg27/paletti.git "$PALETTI_DIR" "Paletti"
+
+        # Paletti only recolors icons on Tela-circle (installed in the packages step).
+        run gsettings set org.gnome.desktop.interface icon-theme Tela-circle-dark
 
         # Links ~/.local/bin/paletti, enables the transition extension
         # and adds the Super+Y / Super+Shift+Y shortcuts. Idempotent.
