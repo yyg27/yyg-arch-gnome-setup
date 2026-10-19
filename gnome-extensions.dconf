@@ -17,7 +17,7 @@ pipeline='pipeline_default'
 pipeline='pipeline_default'
 
 [blur-my-shell/dash-to-dock]
-blur=true
+blur=false
 brightness=0.59999999999999998
 pipeline='pipeline_default_rounded'
 sigma=30
@@ -31,10 +31,14 @@ pipeline='pipeline_default'
 pipeline='pipeline_default'
 
 [blur-my-shell/panel]
+blur=false
 brightness=0.59999999999999998
 corner-radius=0
 pipeline='pipeline_default'
 sigma=30
+
+[blur-my-shell/popup]
+blur=false
 
 [blur-my-shell/screenshot]
 pipeline='pipeline_default'
@@ -78,7 +82,7 @@ panel-button-padding-size=0
 panel-icon-size=16
 panel-in-overview=true
 panel-indicator-padding-size=0
-panel-size=26
+panel-size=32
 ripple-box=true
 search=true
 show-apps-button=true
