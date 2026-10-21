@@ -672,7 +672,7 @@ dconf dump /org/gnome/shell/extensions/ \
 dconf load /org/gnome/shell/extensions/ < gnome-extensions.dconf
 ```
 
-Tell the user to log out and back in to activate newly installed extensions.
+Tell the user to log out and back in to activate newly installed extensions. At the end of the setup, ask whether to log out now and, if yes, run `gnome-session-quit --logout --no-prompt`.
 
 ---
 

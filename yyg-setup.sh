@@ -1070,3 +1070,12 @@ echo "To activate new shell settings,"
 echo "close and reopen the terminal."
 echo
 echo "YYG setup completed. 🚀"
+
+# New extensions only load after logging out.
+if ! $DRY_RUN && should_run extensions && command -v gnome-session-quit >/dev/null; then
+    echo
+    read -r -p "Log out now to activate the new extensions? [y/N] " LOGOUT </dev/tty
+    if [[ "$LOGOUT" =~ ^[Yy]$ ]]; then
+        gnome-session-quit --logout --no-prompt
+    fi
+fi
