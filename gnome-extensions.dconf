@@ -100,9 +100,6 @@ capslock-indicator='when-active'
 numlock-indicator='never'
 numlock-notification='osd'
 
-[user-theme]
-name='rewaita'
-
 [vitals]
 hot-sensors=['_memory_usage_', '_system_load_1m_', '__network-rx_max__']
 position-in-panel=0

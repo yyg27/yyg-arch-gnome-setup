@@ -896,6 +896,9 @@ if should_run paletti; then
         # and adds the Super+Y / Super+Shift+Y shortcuts. Idempotent.
         run python "$PALETTI_DIR/paletti.py" --install
 
+        # The extension settings above reset the shell theme and dock, so apply a palette.
+        run python "$PALETTI_DIR/paletti.py" "$(cat "$HOME/.local/state/paletti/current" 2>/dev/null || echo everforest)"
+
         success "Paletti installed. Press Super+Y to switch palettes."
 
     else
