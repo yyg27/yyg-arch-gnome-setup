@@ -60,6 +60,8 @@ readonly SYSTEM_SHORTCUTS=(
     "org.gnome.desktop.wm.keybindings|toggle-maximized|['<Super>g', '<Super>Up', '<Alt>F10']"
     # Not a shortcut, applied the same way: minimize, maximize and close on the right.
     "org.gnome.desktop.wm.preferences|button-layout|'appmenu:minimize,maximize,close'"
+    # Also not a shortcut: GNOME hides Log Out in the power menu on single-user systems.
+    "org.gnome.shell|always-show-log-out|true"
 )
 
 # extensions.gnome.org UUIDs

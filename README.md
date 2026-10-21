@@ -222,7 +222,7 @@ Super + 9
 
 are also disabled.
 
-Window title bars also get **minimize, maximize and close** buttons on the right.
+Window title bars also get **minimize, maximize and close** buttons on the right, and the power menu always shows **Log Out**.
 
 Existing custom shortcuts are **preserved**. The YYG shortcuts are stored under their own `yyg-*` keybinding paths, and shortcuts created by older versions of this setup (same command and key) are replaced instead of duplicated.
 

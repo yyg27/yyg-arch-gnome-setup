@@ -583,6 +583,14 @@ gsettings set \
     "'appmenu:minimize,maximize,close'"
 ```
 
+### Power Menu → Always Show Log Out
+
+GNOME hides Log Out in the power menu when there is only one user.
+
+```bash
+gsettings set org.gnome.shell always-show-log-out true
+```
+
 ---
 
 # 14. Disable Dock Application Shortcuts
